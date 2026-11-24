@@ -20,7 +20,7 @@ jobs:
         run: |
           chmod +x build.lua || true
           chmod -R +x build_tools || true
-          find . -name "Giovanni Splash Screen.asm" -exec sed -i 's/binclude.*Giovanni Splash\.bin.*/even/g' {} +
+          find . -name "Giovanni Splash Screen.asm" -exec sed -i 's/binclude.*/dc.b 0,0/g' {} +
           lua5.3 build.lua || { cat s2.log 2>/dev/null || true; exit 1; }
 
       - name: Upload built ROM
