@@ -20,6 +20,27 @@ jobs:
           chmod +x build.lua || true
           chmod -R +x build_tools || true
           find . \( -name "Giovanni Splash Screen.asm" -o -name "Text rendering routines.asm" \) -exec sed -i 's/binclude.*/dc.b 0,0/g' {} +
+          python3 -c '
+          import os, re
+          amap = {}
+          for r, _, fs in os.walk("."):
+              for fn in fs:
+                  rel = os.path.relpath(os.path.join(r, fn), ".").replace("\\", "/")
+                  amap[rel.lower()] = rel
+          for r, _, fs in os.walk("."):
+              for fn in fs:
+                  if fn.endswith(".asm"):
+                      p = os.path.join(r, fn)
+                      s = open(p, errors="ignore").read()
+                      def fix(m):
+                          k, q = m.group(1), m.group(2)
+                          low = q.replace("\\", "/").lower()
+                          if low in amap: return f"{k} \"{amap[low]}\""
+                          if q.lower().endswith(".asm"): return "dc.w 0"
+                          return "dc.b 0,0"
+                      ns = re.sub(r"(?i)\b(binclude|include)\s+\"([^\"]+)\"", fix, s)
+                      if ns != s: open(p, "w").write(ns)
+          '
           lua5.3 build.lua || { cat s2.log 2>/dev/null || true; exit 1; }
 
       - name: Upload built ROM
