@@ -30,7 +30,7 @@ fixBugs = 1
 allOptimizations = 0
 ;	| If 1, enables all optimizations
 ;
-skipChecksumCheck = 0
+skipChecksumCheck = 1
 ;	| If 1, disables the slow bootup checksum calculation
 ;
 zeroOffsetOptimization = 0|allOptimizations
@@ -361,7 +361,7 @@ CheckSumCheck:
 
 ; loc_328:
 ChecksumTest:
-    if skipChecksumCheck=0	; checksum code
+    if skipChecksumCheck = 1	; checksum code
 	movea.l	#EndOfHeader,a0	; start checking bytes after the header ($200)
 	movea.l	#ROMEndLoc,a1	; stop at end of ROM
 	move.l	(a1),d0
@@ -425,7 +425,7 @@ GameMode_OptionsMenu:	bra.w	OptionsMenu		; Options mode
 GameMode_LevelSelect:	bra.w	LevelSelectMenu		; Level select mode
 GameMode_GiovanniSplash bra.w	GiovanniSplash	; Giovanni Splash Screen
 ; ===========================================================================
-    if skipChecksumCheck=0	; checksum error code
+    if skipChecksumCheck = 1	; checksum error code
 ; loc_3CE:
 ChecksumError:
 	move.l	d1,-(sp)
