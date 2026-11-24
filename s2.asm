@@ -81035,6 +81035,89 @@ Hurt_Sound:
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
 ; loc_3F926: KillSonic:
+EXE_NextStage:
+	moveq	#0,d0
+	move.b	($FFFFF670).w,d0
+	addq.b	#1,($FFFFF670).w
+	cmpi.b	#0,d0
+	bne.s	.s1
+	move.w	#3,(Player_mode).w
+	move.w	#mystic_cave_zone_act_1,d0
+	rts
+.s1:
+	cmpi.b	#1,d0
+	bne.s	.s2
+	move.b	#1,($FFFFF671).w
+	move.w	#1,(Player_mode).w
+	move.w	#emerald_hill_zone_act_1,d0
+	rts
+.s2:
+	cmpi.b	#2,d0
+	bne.s	.s3
+	move.w	#1,(Player_mode).w
+	move.w	#chemical_plant_zone_act_1,d0
+	rts
+.s3:
+	cmpi.b	#3,d0
+	bne.s	.s4
+	move.b	#1,($FFFFF672).w
+	move.w	#2,(Player_mode).w
+	move.w	#hill_top_zone_act_1,d0
+	rts
+.s4:
+	cmpi.b	#4,d0
+	bne.s	.s5
+	move.w	#2,(Player_mode).w
+	move.w	#casino_night_zone_act_1,d0
+	rts
+.s5:
+	cmpi.b	#5,d0
+	bne.s	.sEnd
+	move.b	#1,($FFFFF673).w
+	bra.s	EXE_PickEnding
+.sEnd:
+	move.w	#-1,d0
+	rts
+
+EXE_PickEnding:
+	moveq	#0,d1
+	tst.b	($FFFFF671).w
+	beq.s	.noK
+	bset	#0,d1
+.noK:
+	tst.b	($FFFFF672).w
+	beq.s	.noS
+	bset	#1,d1
+.noS:
+	tst.b	($FFFFF673).w
+	beq.s	.noT
+	bset	#2,d1
+.noT:
+	add.w	d1,d1
+	move.w	EXE_EndingTable(pc,d1.w),d0
+	move.w	EXE_EndCharTable(pc,d1.w),(Player_mode).w
+	rts
+
+EXE_EndingTable:
+	dc.w	-1
+	dc.w	oil_ocean_zone_act_1
+	dc.w	metropolis_zone_act_1
+	dc.w	mystic_cave_zone_act_2
+	dc.w	wing_fortress_zone
+	dc.w	oil_ocean_zone_act_2
+	dc.w	sky_chase_zone
+	dc.w	death_egg_zone_act_1
+
+EXE_EndCharTable:
+	dc.w	1
+	dc.w	3
+	dc.w	1
+	dc.w	3
+	dc.w	2
+	dc.w	2
+	dc.w	0
+	dc.w	0
+
 KillCharacter:
 	cmpi.b	#6,($FFFFF670).w
 	bhs.s	.normalDeath
@@ -88461,86 +88544,3 @@ paddingSoFar	:= paddingSoFar+1
 	shared word_728C_user,Obj5F_MapUnc_7240,off_3A294,MapRUnc_Sonic,movewZ80CompSize
 EndOfRom:
 	END
-
-EXE_NextStage:
-	moveq	#0,d0
-	move.b	($FFFFF670).w,d0
-	addq.b	#1,($FFFFF670).w
-	cmpi.b	#0,d0
-	bne.s	.s1
-	move.w	#3,(Player_mode).w
-	move.w	#mystic_cave_zone_act_1,d0
-	rts
-.s1:
-	cmpi.b	#1,d0
-	bne.s	.s2
-	move.b	#1,($FFFFF671).w
-	move.w	#1,(Player_mode).w
-	move.w	#emerald_hill_zone_act_1,d0
-	rts
-.s2:
-	cmpi.b	#2,d0
-	bne.s	.s3
-	move.w	#1,(Player_mode).w
-	move.w	#chemical_plant_zone_act_1,d0
-	rts
-.s3:
-	cmpi.b	#3,d0
-	bne.s	.s4
-	move.b	#1,($FFFFF672).w
-	move.w	#2,(Player_mode).w
-	move.w	#hill_top_zone_act_1,d0
-	rts
-.s4:
-	cmpi.b	#4,d0
-	bne.s	.s5
-	move.w	#2,(Player_mode).w
-	move.w	#casino_night_zone_act_1,d0
-	rts
-.s5:
-	cmpi.b	#5,d0
-	bne.s	.sEnd
-	move.b	#1,($FFFFF673).w
-	bra.s	EXE_PickEnding
-.sEnd:
-	move.w	#-1,d0
-	rts
-
-EXE_PickEnding:
-	moveq	#0,d1
-	tst.b	($FFFFF671).w
-	beq.s	.noK
-	bset	#0,d1
-.noK:
-	tst.b	($FFFFF672).w
-	beq.s	.noS
-	bset	#1,d1
-.noS:
-	tst.b	($FFFFF673).w
-	beq.s	.noT
-	bset	#2,d1
-.noT:
-	add.w	d1,d1
-	move.w	EXE_EndingTable(pc,d1.w),d0
-	move.w	EXE_EndCharTable(pc,d1.w),(Player_mode).w
-	rts
-
-EXE_EndingTable:
-	dc.w	-1
-	dc.w	oil_ocean_zone_act_1
-	dc.w	metropolis_zone_act_1
-	dc.w	mystic_cave_zone_act_2
-	dc.w	wing_fortress_zone
-	dc.w	oil_ocean_zone_act_2
-	dc.w	sky_chase_zone
-	dc.w	death_egg_zone_act_1
-
-EXE_EndCharTable:
-	dc.w	1
-	dc.w	3
-	dc.w	1
-	dc.w	3
-	dc.w	2
-	dc.w	2
-	dc.w	0
-	dc.w	0
