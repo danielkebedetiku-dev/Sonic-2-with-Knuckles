@@ -27,7 +27,7 @@ jobs:
                   if fn.endswith(".asm"):
                       p = os.path.join(root, fn)
                       txt = open(p, errors="ignore").read()
-                      for m in re.findall(r"binclude\s+\"([^\"]+)\"", txt):
+                      for m in re.findall(r"binclude\s+\x22([^\x22]+)\x22", txt):
                           fp = m.replace("\\", "/")
                           if not os.path.exists(fp):
                               os.makedirs(os.path.dirname(fp) or ".", exist_ok=True)
