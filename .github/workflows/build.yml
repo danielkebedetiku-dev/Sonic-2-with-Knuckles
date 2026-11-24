@@ -36,7 +36,7 @@ jobs:
                           k, q = m.group(1), m.group(2)
                           low = q.replace("\\", "/").lower()
                           if low in amap: return f"{k} \"{amap[low]}\""
-                          if q.lower().endswith(".asm"): return "dc.w 0"
+                          if q.lower().endswith(".asm"): return "rts"
                           return "dc.b 0,0"
                       ns = re.sub(r"(?i)\b(binclude|include)\s+\"([^\"]+)\"", fix, s)
                       if ns != s: open(p, "w").write(ns)
