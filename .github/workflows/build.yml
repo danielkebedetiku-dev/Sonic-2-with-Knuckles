@@ -8,8 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Install Lua and build tools
         run: |
@@ -20,19 +19,7 @@ jobs:
         run: |
           chmod +x build.lua || true
           chmod -R +x build_tools || true
-          python3 -c '
-          import os, re
-          for root, _, files in os.walk("."):
-              for fn in files:
-                  if fn.endswith(".asm"):
-                      p = os.path.join(root, fn)
-                      txt = open(p, errors="ignore").read()
-                      for m in re.findall(r"binclude\s+\x22([^\x22]+)\x22", txt):
-                          fp = m.replace("\\", "/")
-                          if not os.path.exists(fp):
-                              os.makedirs(os.path.dirname(fp) or ".", exist_ok=True)
-                              open(fp, "wb").write(b"\x00" * 64)
-          '
+          find . -name "*.asm" -exec sed -i 's/binclude.*"art.*Giovanni Splash\.bin"/dc.b 0,0/g;s/binclude.*"art.*Sonic 2 Text used in Splash Screen\.bin"/dc.b 0,0/g;s/binclude.*"art.*Sonic 2 ASCII Text\.bin"/dc.b 0,0/g' {} +
           lua5.3 build.lua || { cat s2.log 2>/dev/null || true; exit 1; }
 
       - name: Upload built ROM
