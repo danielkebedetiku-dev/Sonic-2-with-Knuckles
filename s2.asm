@@ -4106,7 +4106,7 @@ Sega_WaitEnd:
 Sega_GotoTitle:
 	clr.w	(SegaScr_PalDone_Flag).w
 	clr.w	(SegaScr_VInt_Subrout).w
-	move.b	#GameModeID_Giovanni,(Game_Mode).w	; => TitleScreen
+	move.b	#GameModeID_TitleScreen,(Game_Mode).w	; => TitleScreen
 	rts
 
 ; ---------------------------------------------------------------------------
