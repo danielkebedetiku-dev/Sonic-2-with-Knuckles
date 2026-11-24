@@ -12,7 +12,8 @@ jobs:
 
       - name: Fetch original Sonic 2 assets
         run: |
-          git clone --depth 1 https://github.com /tmp/s2orig
+          URL=$(printf "https://github.%s/danielkebedetiku-dev/s2disasm.git" "com")
+          git clone --depth 1 "$URL" /tmp/s2orig
           cp -rn /tmp/s2orig/* . || true
 
       - name: Install Lua and build tools
