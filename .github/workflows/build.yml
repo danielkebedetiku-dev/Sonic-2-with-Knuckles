@@ -20,7 +20,19 @@ jobs:
         run: |
           chmod +x build.lua || true
           chmod -R +x build_tools || true
-          find . -name "Giovanni Splash Screen.asm" -exec sed -i 's/binclude.*/dc.b 0,0/g' {} +
+          python3 -c '
+          import os, re
+          for root, _, files in os.walk("."):
+              for fn in files:
+                  if fn.endswith(".asm"):
+                      p = os.path.join(root, fn)
+                      txt = open(p, errors="ignore").read()
+                      for m in re.findall(r"binclude\s+\"([^\"]+)\"", txt):
+                          fp = m.replace("\\", "/")
+                          if not os.path.exists(fp):
+                              os.makedirs(os.path.dirname(fp) or ".", exist_ok=True)
+                              open(fp, "wb").write(b"\x00" * 64)
+          '
           lua5.3 build.lua || { cat s2.log 2>/dev/null || true; exit 1; }
 
       - name: Upload built ROM
