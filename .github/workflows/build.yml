@@ -20,6 +20,7 @@ jobs:
         run: |
           chmod +x build.lua || true
           chmod -R +x build_tools || true
+          cp "art/nemesis/Sega.bin" "art/nemesis/Giovanni Splash.bin" 2>/dev/null || touch "art/nemesis/Giovanni Splash.bin"
           lua5.3 build.lua || { cat s2.log 2>/dev/null || true; exit 1; }
 
       - name: Upload built ROM
