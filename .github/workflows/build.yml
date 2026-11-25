@@ -30,7 +30,7 @@ jobs:
         run: |
           chmod +x build.lua || true
           chmod -R +x build_tools || true
-          sed -i 's/GameModeID_SegaScreen/GameModeID_TitleScreen/g;s/GameModeID_Giovanni/GameModeID_TitleScreen/g;s/skipChecksumCheck\s*=\s*0/skipChecksumCheck = 1/g' s2.asm
+          sed -i 's/GameModeID_SegaScreen/GameModeID_Level/g;s/GameModeID_Giovanni/GameModeID_Level/g;s/skipChecksumCheck\s*=\s*0/skipChecksumCheck = 1/g' s2.asm
           find . \( -name "Giovanni Splash Screen.asm" -o -name "Text rendering routines.asm" \) -exec sed -i 's/binclude.*/dc.b 0,0/g' {} +
           python3 -c '
           import os, re
